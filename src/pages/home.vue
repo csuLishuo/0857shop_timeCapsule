@@ -10,7 +10,7 @@
   .home-container{
     padding-bottom: px2rem(50);
     .topBar{
-      background: #ff3e31;
+      background: #7f281f;
       height: px2rem(94);
       padding: px2rem(18) 0;
       display: flex;
@@ -72,6 +72,12 @@
       }
     }
     .banner{
+      background-color: #fff;
+      background-image: url("../images/img12.png");
+      background-position: top;
+      background-repeat: no-repeat;
+      background-size: 100% auto;
+      padding: 0 px2rem(20);
       .van-swipe-item{
         height: px2rem(278) !important;
         img{
@@ -105,11 +111,18 @@
     }
     .ad-box{
       width: 100%;
-      height: px2rem(234);
+      /*height: px2rem(234);*/
       background: #fff;
+      padding: 0 px2rem(20);
       img{
         width: 100%;
         height: 100%;
+      }
+    }
+    .area-del{
+      width: 100%;
+      img{
+        width: 100%;
       }
     }
     .area-1{
@@ -430,10 +443,15 @@
     </div>
     <div class="banner">
       <van-swipe :autoplay="3000">
+        <van-swipe-item v-for="(item, index) in images" :key="index">
+          <img :src="item" alt="">
+        </van-swipe-item>
+      </van-swipe>
+      <!--<van-swipe :autoplay="3000">
         <van-swipe-item v-for="(item, index) in bannerData" :key="index">
           <img :src="filePath + item.bannerPic" alt="">
         </van-swipe-item>
-      </van-swipe>
+      </van-swipe>-->
     </div>
     <div class="links">
       <div class="wrapper" @click="go(1)">
@@ -470,9 +488,12 @@
       </div>
     </div>
     <div class="ad-box">
-      <img src="../images/icon1.png" alt="">
+      <img src="../images/imgDel7.png" alt="">
     </div>
-    <div class="area-1 clearfix">
+    <div class="area-del">
+      <img src="../images/imgDel8.jpg" alt="">
+    </div>
+    <!--<div class="area-1 clearfix">
       <div class="title">热卖商品</div>
       <div class="area-1-container">
         <div class="left-box">
@@ -546,7 +567,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
     <div class="area-3">
       <div class="scroll-box">
         <div class="item on">
@@ -635,10 +656,12 @@ export default {
   data () {
     return {
       images: [
-        require('../images/icon1.png'),
+        require('../images/imgDel6.jpg'),
         require('../images/icon1_on.png'),
-        require('../images/icon2.png'),
-        require('../images/icon3.png')
+        require('../images/imgDel6.jpg'),
+        require('../images/icon1_on.png'),
+        require('../images/imgDel6.jpg'),
+        require('../images/imgDel6.jpg')
       ],
       bannerData: [],
       filePath: ''

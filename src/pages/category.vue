@@ -4,8 +4,13 @@
     @return $px * 1 / 100 * 1rem;
   }
   .category-container{
+    .bg{
+      background-image: url("../images/img13.png");
+      background-position: top;
+      background-repeat: no-repeat;
+      background-size: 100% auto;
+    }
     .topBar{
-      background: #ff3e31;
       height: px2rem(94);
       padding: px2rem(18) 0;
       display: flex;
@@ -35,12 +40,24 @@
         }
       }
     }
-    .banner{
-      background-color: #fff;
+    /*.banner{
+      !*background-color: #fff;*!
+      padding: 0 px2rem(20);
       .img-box{
         width: px2rem(700);
         height: px2rem(270);
         margin: px2rem(6) auto 0;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }*/
+    .banner{
+      padding: 0 px2rem(20);
+      margin-top: px2rem(20);
+      .van-swipe-item{
+        height: px2rem(278) !important;
         img{
           width: 100%;
           height: 100%;
@@ -54,15 +71,15 @@
       overflow-x: scroll;
       -webkit-overflow-scrolling:touch;
       width: 100%;
-      background: #fff;
+      /*background: #fff;*/
       .item{
         font-size: px2rem(26);
         line-height: px2rem(86);
-        color: #7c7c7c;
+        color: #fff;
         margin-right: px2rem(30);
         position: relative;
         &.on{
-          color: #000000;
+          color: #fff;
           font-weight: bold;
           span{
             position: absolute;
@@ -72,7 +89,7 @@
             width: px2rem(32);
             height: px2rem(7);
             border-radius: px2rem(3);
-            background-color: #ff3e31;
+            background-color: #fff;
           }
         }
       }
@@ -105,11 +122,11 @@
           font-size: px2rem(26);
           line-height: px2rem(34);
           margin-top: px2rem(16);
-          color: #45484f;
+          font-weight: bold;
           padding: 0 px2rem(26);
         }
         .price{
-          color: #161616;
+          color: #eb1719;
           font-size: px2rem(24);
           font-weight: bold;
           padding: 0 px2rem(26);
@@ -122,10 +139,10 @@
           .label{
             line-height: px2rem(32);
             padding: 0 px2rem(5);
-            background: #e20001;
+            background: #ffe6e6;
             border-radius: px2rem(3);
             font-size: px2rem(22);
-            color: #fff;
+            color: #eb1719;
           }
           span{
             font-size: px2rem(36);
@@ -138,77 +155,91 @@
 </style>
 <template>
   <div class="category-container">
-    <div class="topBar">
-      <div class="input-box">
-        <img src="../images/icon6.png" alt="">
-        <input type="text">
+    <div class="bg">
+      <div class="topBar">
+        <div class="input-box">
+          <img src="../images/icon6.png" alt="">
+          <input type="text">
+        </div>
       </div>
-    </div>
-    <div class="banner clearfix">
-      <div class="img-box"><img src="../images/img2.png" alt=""></div>
-    </div>
-    <div class="scroll-box">
-      <div class="item on">
-        热门
-        <span></span>
+      <div class="scroll-box">
+        <div class="item on">
+          热门
+          <span></span>
+        </div>
+        <div class="item">
+          热门
+          <span></span>
+        </div>
+        <div class="item">
+          热门
+          <span></span>
+        </div>
+        <div class="item">
+          热门
+          <span></span>
+        </div>
+        <div class="item">
+          热门
+          <span></span>
+        </div>
+        <div class="item">
+          热门
+          <span></span>
+        </div>
+        <div class="item">
+          热门
+          <span></span>
+        </div>
+        <div class="item">
+          热门
+          <span></span>
+        </div>
+        <div class="item">
+          热门
+          <span></span>
+        </div>
+        <div class="item">
+          热门
+          <span></span>
+        </div>
+        <div class="item">
+          热门
+          <span></span>
+        </div>
+        <div class="item">
+          热门
+          <span></span>
+        </div>
+        <div class="item">
+          热门
+          <span></span>
+        </div>
       </div>
-      <div class="item">
-        热门
-        <span></span>
+      <div class="banner">
+        <van-swipe :autoplay="3000">
+          <van-swipe-item v-for="(item, index) in images" :key="index">
+            <img :src="item" alt="">
+          </van-swipe-item>
+        </van-swipe>
+        <!--<van-swipe :autoplay="3000">
+          <van-swipe-item v-for="(item, index) in bannerData" :key="index">
+            <img :src="filePath + item.bannerPic" alt="">
+          </van-swipe-item>
+        </van-swipe>-->
       </div>
-      <div class="item">
-        热门
-        <span></span>
-      </div>
-      <div class="item">
-        热门
-        <span></span>
-      </div>
-      <div class="item">
-        热门
-        <span></span>
-      </div>
-      <div class="item">
-        热门
-        <span></span>
-      </div>
-      <div class="item">
-        热门
-        <span></span>
-      </div>
-      <div class="item">
-        热门
-        <span></span>
-      </div>
-      <div class="item">
-        热门
-        <span></span>
-      </div>
-      <div class="item">
-        热门
-        <span></span>
-      </div>
-      <div class="item">
-        热门
-        <span></span>
-      </div>
-      <div class="item">
-        热门
-        <span></span>
-      </div>
-      <div class="item">
-        热门
-        <span></span>
-      </div>
+      <!--<div class="banner clearfix">
+        <div class="img-box"><img src="../images/img2.png" alt=""></div>
+      </div>-->
     </div>
     <div class="goodsList">
       <div class="wrapper">
         <div class="img-box"><img src="../images/img2.png" alt=""></div>
+        <div class="name ellipsis-2">PZAAO 中空缎面款色休中空缎面款色休中空缎面款色休中空缎面款色休..PZAAO 中空缎面款色休..</div>
         <div class="price">
           <div>￥<span>599.00</span></div>
           <div class="label">满38减10</div>
         </div>
-        <div class="name ellipsis-2">PZAAO 中空缎面款色休中空缎面款色休中空缎面款色休中空缎面款色休..PZAAO 中空缎面款色休..</div>
       </div>
     </div>
     <tabbar :activeIndex="1"></tabbar>
@@ -226,6 +257,14 @@ export default {
   },
   data () {
     return {
+      images: [
+        require('../images/imgDel6.jpg'),
+        require('../images/icon1_on.png'),
+        require('../images/imgDel6.jpg'),
+        require('../images/icon1_on.png'),
+        require('../images/imgDel6.jpg'),
+        require('../images/imgDel6.jpg')
+      ]
     }
   },
   methods: {
