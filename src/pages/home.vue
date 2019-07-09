@@ -719,7 +719,7 @@ export default {
   },
   mounted () {
     // this.test()
-    this.getBannerList()
+    // this.getBannerList()
   },
   watch: {
   }

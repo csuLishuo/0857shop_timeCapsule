@@ -56,6 +56,7 @@
             color: #757575;
             font-size: px2rem(20);
             line-height: px2rem(34);
+            margin-top: px2rem(10);
           }
           .b {
             display: flex;
