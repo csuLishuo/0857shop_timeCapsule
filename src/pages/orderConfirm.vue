@@ -469,7 +469,7 @@ export default {
             number: this.value,
             shareType: this.initData.list[0].shareType
           }],
-        platform: 1,
+        platform: 2,
         province: this.defaultAddressData.province,
         city: this.defaultAddressData.city,
         county: this.defaultAddressData.county,
