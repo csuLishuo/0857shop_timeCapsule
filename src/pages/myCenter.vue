@@ -337,34 +337,34 @@
         </div>
       </div>
     </div>
-    <div class="area-2 clearfix" @click="go(4)">
+    <div class="area-2 clearfix">
       <div class="title-box">
         <div class="name">我的订单</div>
         <div class="icon-box"><img src="../images/icon21.png" alt=""></div>
       </div>
       <div class="area-2-1">
-        <div class="wrap">
+        <div class="wrap" @click="goMyOrder(1)">
           <div class="img-box">
             <img src="../images/icon22.png" alt="">
             <!--<span>99</span>-->
           </div>
           <div class="name">待付款</div>
         </div>
-        <div class="wrap">
+        <div class="wrap" @click="goMyOrder(2)">
           <div class="img-box">
             <img src="../images/icon23.png" alt="">
             <!--<span>1</span>-->
           </div>
           <div class="name">待发货</div>
         </div>
-        <div class="wrap">
+        <div class="wrap" @click="goMyOrder(3)">
           <div class="img-box">
             <img src="../images/icon24.png" alt="">
             <!--<span>1</span>-->
           </div>
           <div class="name">待收货</div>
         </div>
-        <div class="wrap">
+        <div class="wrap" @click="goMyOrder(5)">
           <div class="img-box"><img src="../images/icon25.png" alt=""></div>
           <div class="name">已完成</div>
         </div>
@@ -405,11 +405,11 @@
     <div class="area-4 clearfix">
       <div class="title">热卖推荐</div>
       <div class="recommend-list">
-        <div class="wrapper">
-          <div class="img-box"><img src="../images/img2.png" alt=""></div>
-          <div class="name ellipsis-1">PZAAO 中空缎面款色休..PZAAO 中空缎面款色休..</div>
-          <div class="des ellipsis-1">已售1389/剩2000</div>
-          <div class="price">￥<span>599.00</span></div>
+        <div class="wrapper" v-for="item in goodsList" :key="item.id" @click="goDetail(item.id)">
+          <div class="img-box"><img :src="filePath + item.pics.split(';')[0]" alt=""></div>
+          <div class="name ellipsis-1">【{{item.title}}】{{item.subTitle}}</div>
+          <!-- <div class="des ellipsis-1">已售1389/剩2000</div> -->
+          <div class="price">￥<span>{{item.nowPrice}}</span></div>
         </div>
       </div>
     </div>
@@ -427,9 +427,44 @@ export default {
   },
   data () {
     return {
+      filePath: '',
+      goodsList: [],
+      sendData: {
+        categoryId: 0,
+        pageNumber: 1,
+        pageSize: 4
+      }
     }
   },
   methods: {
+    goDetail (id) {
+      this.$router.push({
+        path: 'detail_hotSale',
+        query: {
+          detailId: id
+        }
+      })
+    },
+    goMyOrder (status) {
+      this.$router.push({
+        name: 'myOrder',
+        params: {
+          status: status
+        }
+      })
+    },
+    getGoodsList () {
+      this.$post('/api/goodsHotSale/getGoodsHotSaleListByCategoryId', this.sendData).then(res => {
+        if (res.result === 0) {
+          this.goodsList = res.data.list
+          this.filePath = res.filePath
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
+    },
     go (status) {
       if (status === 1) {
         this.$router.push({
@@ -485,7 +520,7 @@ export default {
     }
   },
   mounted () {
-    // this.test()
+    this.getGoodsList()
   },
   watch: {
   }

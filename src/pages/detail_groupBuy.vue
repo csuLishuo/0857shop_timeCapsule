@@ -424,33 +424,33 @@
         <van-tab title="商品详情">
           <div class="banner">
             <van-swipe :autoplay="3000">
-              <van-swipe-item v-for="(image, index) in images" :key="index">
-                <img :src="image" />
+              <van-swipe-item v-for="(item, index) in bannerData" :key="index">
+                <img :src="filePath + item" alt="">
               </van-swipe-item>
             </van-swipe>
           </div>
           <div class="price-wrapper">
             <div class="price-box">
-              <div class="price">￥<span>599.00</span></div>
+              <div class="price">￥<span>{{detailData.nowPrice}}</span></div>
               <div class="info">
-                <div class="price-origin">￥699.00</div>
-                <span>已售1389/剩2000</span>
+                <div class="price-origin">￥{{detailData.marketPrice}}</div>
+                <span>已售{{detailData.totalSales}}/库存{{detailDataAttrs.stock}}</span>
               </div>
             </div>
             <div class="right-box">
               <div class="time-box">
-                <div class="time">开始：12: 00: 00</div>
+                <div class="time">开始：{{detailData.startTime}}</div>
               </div>
               <div class="time-box">
-                <div class="time">开始：12: 00: 00</div>
+                <div class="time">开始：{{detailData.endTime}}</div>
               </div>
             </div>
           </div>
           <div class="title">
             <div class="text ellipsis-2">
-              【同价618】旗舰店 卡西欧（CASIO）樱花色新 款女表时尚防水运动学生表BGD-560
+              【{{detailData.title}}】{{detailData.subTitle}}
             </div>
-            <div class="share">分享</div>
+            <!--<div class="share">分享</div>-->
           </div>
           <div class="area-1">
             <div class="line">
@@ -461,12 +461,12 @@
                 <div class="text">快递：免运费</div>
               </div>
             </div>
-            <div class="line">
+            <!--<div class="line">
               <div class="name">优惠</div>
               <div class="right-box">
                 <div class="text-1">满2000元减200元</div>
               </div>
-            </div>
+            </div>-->
             <div class="line">
               <div class="name">保障</div>
               <div class="right-box">
@@ -493,29 +493,12 @@
               <div class="border"></div>
             </div>
             <div class="img-box">
-              <img src="../images/img1.png" alt="">
+              <img v-for="(item, index) in detailPics" :key="index" :src="filePath + item" alt="">
             </div>
           </div>
         </van-tab>
         <van-tab title="用户评价">
-          <div class="area-3">
-            <div class="wrapper on">全部 <span>407</span></div>
-            <div class="wrapper">好评 <span>407</span></div>
-            <div class="wrapper">中评 <span>407</span></div>
-            <div class="wrapper">差评 <span>407</span></div>
-          </div>
-          <div class="area-4">
-            <div class="wrapper">
-              <div class="name-box">
-                <div class="img-box"><img src="../images/img2.png" alt=""></div>
-                <div class="name">斯嘉丽</div>
-              </div>
-              <div class="comment-content">很好用，买的是2.0的，除了传输速度有点慢，是款到即发的毛宁，考试、鲜红色的，三角函数，很简单。的法律规范是合管就的服，对接焊缝思。</div>
-              <div class="img-list">
-                <div class="img-box" v-for="(image, index) in images" :key="index" @click="preview(index)"><img :src="image" alt=""></div>
-              </div>
-            </div>
-          </div>
+          <commentPage :goodsId="detailData.goodsId"></commentPage>          
         </van-tab>
       </van-tabs>
     </div>
@@ -564,11 +547,11 @@
         <div class="text">收藏</div>
       </div>
       <div class="btn btn-1">
-        <div class="price">￥100000</div>
+        <div class="price">￥{{detailData.nowPrice}}</div>
         <div class="text">单独购买</div>
       </div>
       <div class="btn btn-2">
-        <div class="price">￥10000</div>
+        <div class="price">￥{{detailData.groupPrice}}</div>
         <div class="text">发起拼团</div>
       </div>
     </div>
@@ -576,10 +559,13 @@
 </template>
 <script>
 import { Toast, ImagePreview } from 'vant'
+import lf from 'lf'
+import commentPage from '../components/commentPage'
 
 export default {
   name: 'detail_groupBuy',
   components: {
+    commentPage
   },
   data () {
     return {
@@ -591,15 +577,45 @@ export default {
         require('../images/icon3.png')
       ],
       detailId: '',
-      showPop_select: false
+      showPop_select: false,
+      value: '',
+      detailData: {},
+      filePath: '',
+      bannerData: [],
+      detailPics: [],
+      detailDataAttrs: {},
+      groupTime: ''
     }
   },
   methods: {
-    test () {
-      Toast.loading({
-        mask: true,
-        message: '加载中...'
+    getDetailData () {
+      this.$post('/api/goodsGroupRules/getGoodsGroupRulesById', {
+        id: this.detailId
+        // goodsId: 1
+      }).then(res => {
+        if (res.result === 0) {
+          this.detailData = res.data
+          this.bannerData = this.detailData.pics.split(';')
+          this.detailPics = this.detailData.details.split(';')
+          this.detailDataAttrs = JSON.parse(this.detailData.attrs)[0]
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
       })
+    },
+    timeConfirm (value) {
+      console.log(value)
+      var month = value.getMonth() + 1
+      var strDate = value.getDate()
+      if (month >= 1 && month <= 9) {
+        month = '0' + month
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate
+      }
+      this.time = value.getFullYear() + '-' + month + '-' + strDate
     },
     preview (i) {
       ImagePreview({
@@ -609,11 +625,11 @@ export default {
     }
   },
   mounted () {
-    // this.test()
   },
   created () {
-    this.detailId = this.$route.params.id
-    console.log('detailId', this.detailId)
+    this.filePath = sessionStorage.getItem('filePath')
+    this.detailId = this.$route.query.detailId
+    this.getDetailData()
   },
   watch: {
   }

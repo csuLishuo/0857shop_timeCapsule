@@ -318,6 +318,14 @@
         }
       }
     }
+    .area-1-del, .area-2-del{
+      width: px2rem(710);
+      margin: px2rem(20) auto;
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
     .area-3{
       background: #fff;
       .scroll-box{
@@ -443,8 +451,8 @@
     </div>
     <div class="banner">
       <van-swipe :autoplay="3000">
-        <van-swipe-item v-for="(item, index) in images" :key="index">
-          <img :src="item" alt="">
+        <van-swipe-item v-for="(item, index) in bannerData" :key="index">
+          <img :src="filePath + item.bannerPic" alt="">
         </van-swipe-item>
       </van-swipe>
       <!--<van-swipe :autoplay="3000">
@@ -487,11 +495,17 @@
         <div class="text">更多</div>
       </div>
     </div>
-    <div class="ad-box">
-      <img src="../images/imgDel7.png" alt="">
+    <div class="ad-box" @click="goActiveList">
+      <img :src="filePath + adData.bannerPic" alt="">
     </div>
-    <div class="area-del">
+    <!--<div class="area-del">
       <img src="../images/imgDel8.jpg" alt="">
+    </div>-->
+    <div class="area-1-del" @click="goHotSaleList">
+      <img src="../images/imgDel9.jpg" alt="">
+    </div>
+    <div class="area-2-del" @click="go(3)">
+      <img src="../images/imgDel10.jpg" alt="">
     </div>
     <!--<div class="area-1 clearfix">
       <div class="title">热卖商品</div>
@@ -570,74 +584,36 @@
     </div>-->
     <div class="area-3">
       <div class="scroll-box">
-        <div class="item on">
+        <div class="item" :class="{'on':sendData.categoryId == 0}" @click="changeCate(0)">
           热门
-          <span></span>
         </div>
-        <div class="item">
-          热门
-          <span></span>
-        </div>
-        <div class="item">
-          热门
-          <span></span>
-        </div>
-        <div class="item">
-          热门
-          <span></span>
-        </div>
-        <div class="item">
-          热门
-          <span></span>
-        </div>
-        <div class="item">
-          热门
-          <span></span>
-        </div>
-        <div class="item">
-          热门
-          <span></span>
-        </div>
-        <div class="item">
-          热门
-          <span></span>
-        </div>
-        <div class="item">
-          热门
-          <span></span>
-        </div>
-        <div class="item">
-          热门
-          <span></span>
-        </div>
-        <div class="item">
-          热门
-          <span></span>
-        </div>
-        <div class="item">
-          热门
-          <span></span>
-        </div>
-        <div class="item">
-          热门
-          <span></span>
+        <div class="item" :class="{'on':sendData.categoryId == item.id}" v-for="item in categoryList" :key="item.id" @click="changeCate(item.id)">
+          {{item.chname}}
         </div>
       </div>
       <div class="listbox">
-        <div class="wrapper">
-          <div class="img-box"><img src="../images/icon3.png" alt=""></div>
-          <div class="right-box">
-            <div class="title ellipsis-2">【立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g</div>
-            <div class="des">已售2008件/库存10000件</div>
-            <div class="tag-box">
-              <div class="tag">满38减10</div>
-            </div>
-            <div class="price-box">
-              <div class="price">￥<span>599.00</span></div>
-              <div class="info">包邮 · 七天退换货</div>
+        <van-list
+          v-model="loadingList"
+          :finished="finished"
+          :immediate-check="false"
+          finished-text="没有更多了"
+          @load="getOneMorePage"
+        >
+          <div class="wrapper" v-for="item in goodsList" :key="item.id" @click="goDetail(item.id)">
+            <div class="img-box"><img :src="filePath + item.pics.split(';')[0]" alt=""></div>
+            <div class="right-box">
+              <div class="title ellipsis-2">【{{item.title}}】{{item.subTitle}}</div>
+              <div class="des">已售{{item.totalSales}}/库存{{JSON.parse(item.attrs)[0].stock}}</div>
+              <!--<div class="tag-box">
+                <div class="tag">满38减10</div>
+              </div>-->
+              <div class="price-box">
+                <div class="price">￥<span>{{item.nowPrice}}</span></div>
+                <div class="info">包邮 · 七天退换货</div>
+              </div>
             </div>
           </div>
-        </div>
+        </van-list>
       </div>
     </div>
     <tabbar :activeIndex="0"></tabbar>
@@ -655,27 +631,64 @@ export default {
   },
   data () {
     return {
-      images: [
-        require('../images/imgDel6.jpg'),
-        require('../images/icon1_on.png'),
-        require('../images/imgDel6.jpg'),
-        require('../images/icon1_on.png'),
-        require('../images/imgDel6.jpg'),
-        require('../images/imgDel6.jpg')
-      ],
       bannerData: [],
-      filePath: ''
+      adData: [],
+      filePath: '',
+      categoryList: [],
+      goodsList: [],
+      total: '',
+      totalPage: '',
+      sendData: {
+        categoryId: 0,
+        title: '',
+        pageNumber: 1,
+        pageSize: 5
+      },
+      loadingList: false,
+      finished: false,
+      signInData: {},
+      signScore: ''
     }
   },
   methods: {
     more () {
       Toast('敬请期待')
     },
+    goHotSaleList () {
+      this.$router.push({
+        path: '/hotSaleList'
+      })
+    },
+    goActiveList () {
+      this.$router.push({
+        path: '/activeList'
+      })
+    },
+    handleSignIn () {
+      this.$post('/api/goodsScore/userSignIn', {
+        score: this.signScore
+      }).then(res => {
+        if (res.result === 0) {
+          Toast.success('签到成功')
+          this.$router.push({
+            path: '/signIn'
+          })
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
+    },
     go (status) {
       if (status === 1) {
-        this.$router.push({
-          path: '/signIn'
-        })
+        if (this.signInData.status === 1) {
+          this.handleSignIn()
+        } else {
+          this.$router.push({
+            path: '/signIn'
+          })
+        }
       } else if (status === 2) {
         this.$router.push({
           path: '/groupBuyList'
@@ -702,13 +715,119 @@ export default {
         })
       }
     },
+    goDetail (id) {
+      this.$router.push({
+        path: 'detailPage',
+        query: {
+          detailId: id
+        }
+      })
+    },
+    changeCate (id) {
+      this.sendData.pageNumber = 1
+      this.finished = false
+      this.goodsList = []
+      this.sendData.categoryId = id
+      this.getGoodsList()
+    },
+    search () {
+      this.finished = false
+      this.sendData.pageNumber = 1
+      this.goodsList = []
+      this.getGoodsList()
+    },
     getBannerList () {
       this.$post('/api/banner/getBannerListByBannerType', {
         bannerType: 1
       }).then(res => {
         if (res.result === 0) {
           this.bannerData = res.data
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
+    },
+    getAdImg () {
+      this.$post('/api/banner/getBannerListByBannerType', {
+        bannerType: 2
+      }).then(res => {
+        if (res.result === 0) {
+          this.adData = res.data[0]
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
+    },
+    getGoodsCategory () {
+      this.$post('/api/goodsIssue/getGoodsCategoryByLevel', {
+        level: 1
+      }).then(res => {
+        if (res.result === 0) {
+          this.categoryList = res.data
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
+    },
+    getOneMorePage () {
+      setTimeout(() => {
+        if (Number(this.sendData.pageNumber) < Number(this.totalPage)) {
+          this.sendData.pageNumber++
+          this.getGoodsList()
+        }
+      }, 500)
+    },
+    getGoodsList () {
+      this.$post('/api/goodsIssue/getGoodsIssueListByCategoryId', this.sendData).then(res => {
+        if (res.result === 0) {
+          if (this.sendData.pageNumber === 1) {
+            this.goodsList = res.data.list
+          } else {
+            this.goodsList = this.goodsList.concat(res.data.list)
+          }
           this.filePath = res.filePath
+          sessionStorage.setItem('filePath', this.filePath)
+          this.total = res.data.totalCount
+          this.totalPage = res.data.totalPage
+          // 加载状态结束
+          this.loadingList = false
+          // 数据全部加载完成
+          if (this.goodsList.length >= Number(this.total)) {
+            this.finished = true
+          }
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
+    },
+    // 获取签到信息
+    getSignInData () {
+      this.$post('/api/goodsScore/getUserSignTotal', {
+      }).then(res => {
+        if (res.result === 0) {
+          this.signInData = res.data
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
+    },
+    // 获取签到积分
+    getSignScore () {
+      this.$post('/api/systemSet/getSystemSetByStatus', {
+        status: 1
+      }).then(res => {
+        if (res.result === 0) {
+          this.signScore = res.data.value
         } else {
           Toast.fail(res.message)
         }
@@ -719,7 +838,15 @@ export default {
   },
   mounted () {
     // this.test()
-    // this.getBannerList()
+    if (!sessionStorage.getItem('authStatus')) {
+      location.href = 'http://huoyuancheng.wurenyulecang.com/api/user/authorize?returnUrl=' + encodeURI('http://huoyuancheng.wurenyulecang.com/#/home') + '&type=2'
+    }
+    this.getBannerList()
+    this.getAdImg()
+    this.getGoodsCategory()
+    this.getGoodsList()
+    this.getSignInData()
+    this.getSignScore()
   },
   watch: {
   }

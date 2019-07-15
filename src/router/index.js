@@ -47,6 +47,12 @@ import PublishComment from '@/pages/publishComment'
 import Lottery from '@/pages/lottery'
 import Login from '@/pages/login'
 import Register from '@/pages/register'
+import HotSaleList from '@/pages/hotSaleList'
+import detailHotSale from '@/pages/detail_hotSale'
+import ActiveList from '@/pages/activeList'
+import DetailActive from '@/pages/detail_active'
+import DetailScore from '@/pages/detail_score'
+import SelectAddress from '@/pages/selectAddress'
 
 Vue.use(Router)
 
@@ -399,6 +405,54 @@ export default new Router({
     path: '/lottery',
     name: 'lottery',
     component: Lottery,
+    meta: {
+      keepAlive: true,
+      isBack: false
+    }
+  }, { // 热卖列表
+    path: '/hotSaleList',
+    name: 'hotSaleList',
+    component: HotSaleList,
+    meta: {
+      keepAlive: true,
+      isBack: false
+    }
+  }, { // 热卖商品详情
+    path: '/detail_hotSale',
+    name: 'detail_hotSale',
+    component: detailHotSale,
+    meta: {
+      keepAlive: true,
+      isBack: false
+    }
+  }, { // 活动商品列表
+    path: '/activeList',
+    name: 'activeList',
+    component: ActiveList,
+    meta: {
+      keepAlive: true,
+      isBack: false
+    }
+  }, { // 活动商品详情
+    path: '/detail_active',
+    name: 'detail_active',
+    component: DetailActive,
+    meta: {
+      keepAlive: true,
+      isBack: false
+    }
+  }, { // 积分商品详情
+    path: '/detail_score',
+    name: 'detail_score',
+    component: DetailScore,
+    meta: {
+      keepAlive: true,
+      isBack: false
+    }
+  }, { // 选择地址
+    path: '/selectAddress',
+    name: 'selectAddress',
+    component: SelectAddress,
     meta: {
       keepAlive: true,
       isBack: false

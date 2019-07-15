@@ -98,8 +98,7 @@
 <template>
   <div class="myAddress-container">
     <div class="topBar">
-      <div class="left-box" @click="goBack"><img src="../images/icon39.png" alt=""></div>
-      <div class="title">收货地址</div>
+      <div class="title">选择地址</div>
     </div>
     <div class="area-1">
       <van-list
@@ -109,36 +108,16 @@
         finished-text="没有更多了"
         @load="getOneMorePage"
       >
-        <van-radio-group v-model="defaultResult" @change="setDefault">
-          <div class="wrapper" v-for="item in addressList" :key="item.id">
-            <div class="area-1-1 clearfix">
-              <div class="line-1">
-                <span class="name">{{item.reciever}}</span>
-                <span class="phone">{{item.phone}}</span>
-              </div>
-              <div class="line-2 ellipsis-1">{{item.province + item.city + item.county + item.address}}</div>
+        <div class="wrapper" v-for="item in addressList" :key="item.id">
+          <div class="area-1-1 clearfix" @click="select(item.id)">
+            <div class="line-1">
+              <span class="name">{{item.reciever}}</span>
+              <span class="phone">{{item.phone}}</span>
             </div>
-            <div class="area-1-2">
-              <div class="checkbox">
-                <van-radio :name="item.id">设为默认地址</van-radio>
-              </div>
-              <div class="btn-box">
-                <!--<div class="btn btn-1" @click="goEdit">
-                  <img src="../images/icon59.png" alt="">
-                  编辑
-                </div>-->
-                <div class="btn btn-1" @click="showPopDel(item.id)">
-                  <img src="../images/icon60.png" alt="">
-                  删除
-                </div>
-              </div>
-            </div>
+            <div class="line-2 ellipsis-1">{{item.province + item.city + item.county + item.address}}</div>
           </div>
-        </van-radio-group>
+        </div>
       </van-list>
-    </div>
-    <div class="btn-bottom" @click="goEdit()">
-      新建收货地址
     </div>
   </div>
 </template>
@@ -166,6 +145,10 @@ export default {
     }
   },
   methods: {
+    select (id) {
+      sessionStorage.setItem('addressId', id)
+      this.$router.back(-1)
+    },
     setDefault (id) {
       console.log('setDefault', id)
       this.$post('/api/userAddress/updateDefaultUserAddress', {

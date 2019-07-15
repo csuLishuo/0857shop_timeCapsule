@@ -3,7 +3,7 @@
     //$px为需要转换的字号
     @return $px * 1 / 100 * 1rem;
   }
-  .detailPage-container{
+  .detail_hotSale-container{
     padding-bottom: px2rem(100);
     .van-swipe-item{
       height: px2rem(612) !important;
@@ -397,7 +397,7 @@
   }
 </style>
 <template>
-  <div class="detailPage-container">
+  <div class="detail_hotSale-container">
     <div class="tabs">
       <van-tabs sticky v-model="active">
         <van-tab title="商品详情">
@@ -410,7 +410,7 @@
           </div>
           <div class="price-box">
             <div class="price">￥<span>{{detailData.nowPrice}}</span></div>
-            <div class="info">已售{{detailData.totalSales}}/库存{{detailDataAttrs[0].stock}}</div>
+            <div class="info">已售{{detailData.totalSales}}/库存{{detailDataAttrs.stock}}</div>
           </div>
           <div class="title">
             <div class="text ellipsis-2">
@@ -464,7 +464,7 @@
           </div>
         </van-tab>
         <van-tab title="用户评价">
-          <commentPage :goodsId="detailData.goodsId"></commentPage>
+          <commentPage :goodsId="detailData.goodsId"></commentPage>          
         </van-tab>
       </van-tabs>
     </div>
@@ -472,19 +472,27 @@
       <van-popup v-model="showPop_select" position="bottom">
         <div class="goodDetail">
           <div class="img-box">
-            <img :src="filePath + orderSendData.pic" alt="">
+            <img src="../images/icon3.png" alt="">
           </div>
           <div class="right-box">
             <div class="price-box-pop">
-              <div class="price">￥<span>{{orderSendData.price}}</span></div>
+              <div class="price">￥<span>599.00</span></div>
               <div class="info">包邮 · 七天退换货</div>
             </div>
           </div>
         </div>
         <div class="label-list">
-          <div class="name">{{detailDataAttrs[0].attrType}}</div>
+          <div class="name">颜色</div>
           <div class="wrapper">
-            <div class="wrap" @click="selectAttrSn(index)" :class="{'on':index==showIndex}" v-for="(item, index) in detailDataAttrs" :key="index">{{item.attrTitle}}</div>
+            <div class="wrap on">红色</div>
+            <div class="wrap">红色</div>
+          </div>
+        </div>
+        <div class="label-list">
+          <div class="name">尺码</div>
+          <div class="wrapper">
+            <div class="wrap on">红色</div>
+            <div class="wrap">红色</div>
           </div>
         </div>
         <div class="num-box">
@@ -501,13 +509,12 @@
         <img src="../images/icon36.png" alt="">
         <div class="text">首页</div>
       </div>
-      <div class="icon-box icon-box-1" @click="handleCollect">
-        <img v-if="!collectionStatus" src="../images/icon37.png" alt="">
-        <img v-if="collectionStatus" src="../images/icon37_on.png" alt="">
+      <div class="icon-box icon-box-1">
+        <img src="../images/icon37.png" alt="">
         <div class="text">收藏</div>
       </div>
-      <div class="btn btn-1" @click="addToCart">加入购物车</div>
-      <div class="btn btn-2" @click="handleConfirmBuy">立即购买</div>
+      <div class="btn btn-1">加入购物车</div>
+      <div class="btn btn-2">立即购买</div>
     </div>
   </div>
 </template>
@@ -516,7 +523,7 @@ import { Toast, ImagePreview } from 'vant'
 import commentPage from '../components/commentPage'
 
 export default {
-  name: 'detailPage',
+  name: 'detail_hotSale',
   components: {
     commentPage
   },
@@ -531,127 +538,20 @@ export default {
       ],
       detailId: '',
       showPop_select: false,
-      value: 1,
+      value: '',
       detailData: {},
       filePath: '',
       bannerData: [],
       detailPics: [],
-      detailDataAttrs: [],
-      collectionStatus: false,
-      orderSendData: {},
-      showIndex: 0,
-      userAddressId: ''
+      detailDataAttrs: {}
     }
   },
   methods: {
-    handleConfirmBuy () {
-      let sendData = {
-        list: [{
-          shareId: 0,
-          goodsIssueId: this.detailData.id,
-          goodsId: this.detailData.goodsId,
-          attrSn: this.orderSendData.attrSn,
-          number: this.value,
-          shareType: 0
-        }]
-      }
-      this.$post('/api/orders/orderBuy', sendData).then(res => {
-        if (res.result === 0) {
-          this.$router.push({
-            name: 'orderConfirm',
-            params: {
-              initData: JSON.stringify(res.data),
-              detailData: JSON.stringify(this.detailData)
-            }
-          })
-        } else {
-          Toast.fail(res.message)
-        }
-      }).catch(res => {
-        Toast.fail('系统内部错误')
-      })
-    },
-    selectAttrSn (index) {
-      this.showIndex = index
-      this.orderSendData = this.detailDataAttrs[index]
-    },
-    handleCollect () {
-      if (this.collectionStatus === false) {
-        this.$post('/api/goodsCollection/insertGoodsCollection', {
-          goodsId: this.detailData.goodsId,
-          goodsIssueId: this.detailId
-        }).then(res => {
-          if (res.result === 0) {
-            this.collectionStatus = true
-          } else {
-            Toast.fail(res.message)
-          }
-        }).catch(res => {
-          Toast.fail('系统内部错误')
-        })
-      } else {
-        this.$post('/api/goodsCollection/updateGoodsCollection', {
-          goodsId: this.detailData.goodsId,
-          goodsIssueId: this.detailId
-        }).then(res => {
-          if (res.result === 0) {
-            this.collectionStatus = false
-          } else {
-            Toast.fail(res.message)
-          }
-        }).catch(res => {
-          Toast.fail('系统内部错误')
-        })
-      }
-    },
-    getCollectionStatus () {
-      this.$post('/api/goodsCollection/isCollection', {
-        goodsIssueId: this.detailId
-      }).then(res => {
-        if (res.result === 0) {
-          if (res.data.count !== 0) {
-            this.collectionStatus = true
-          } else {
-            this.collectionStatus = false
-          }
-        } else {
-          Toast.fail(res.message)
-        }
-      }).catch(res => {
-        Toast.fail('系统内部错误')
-      })
-    },
-    addToCart () {
-      this.$post('/api/goodsCar/insertGoodsCar', {
-        goodsId: this.detailData.goodsId,
-        goodsIssueId: this.detailId
-      }).then(res => {
-        if (res.result === 0) {
-          Toast.success(res.message)
-        } else {
-          Toast.fail(res.message)
-        }
-      }).catch(res => {
-        Toast.fail('系统内部错误')
-      })
-    },
     showPop () {
       this.showPop_select = true
     },
-    // 查询默认地址
-    getDefaultAddress () {
-      this.$post('/api/userAddress/queryDefaultUserAddress').then(res => {
-        if (res.result === 0) {
-          this.userAddressId = res.data.id
-        } else {
-          Toast.fail(res.message)
-        }
-      }).catch(res => {
-        Toast.fail('系统内部错误')
-      })
-    },
     getDetailData () {
-      this.$post('/api/goodsIssue/getGoodsIssueById', {
+      this.$post('/api/goodsHotSale/getGoodsHotSaleById', {
         id: this.detailId
         // goodsId: 1
       }).then(res => {
@@ -659,37 +559,12 @@ export default {
           this.detailData = res.data
           this.bannerData = this.detailData.pics.split(';')
           this.detailPics = this.detailData.details.split(';')
-          this.detailDataAttrs = JSON.parse(this.detailData.attrs)
-          this.orderSendData = this.detailDataAttrs[0]
+          this.detailDataAttrs = JSON.parse(this.detailData.attrs)[0]
         } else {
           Toast.fail(res.message)
         }
       }).catch(res => {
         Toast.fail('系统内部错误')
-      })
-    },
-    getSelectArray () {
-      let attrs = [{"attrSn": "bba642d481ba4ec4a8d3b7d780b7a4a0","attrTitle": "红色/10kg","attrType": "颜色/重量","goodsId": 0,"lockStock": 0,"pic": "728a10a5-e8fb-4470-a320-7ab298a38b97.png","price": "32","status": 0,"stock": 13},{"attrSn": "bba642d481ba4ec4a8d3b7d780b7a4a0","attrTitle": "红色/20kg","attrType": "颜色/重量","goodsId": 0,"lockStock": 0,"pic": "728a10a5-e8fb-4470-a320-7ab298a38b97.png","price": "32","status": 0,"stock": 13},{"attrSn": "bba642d481ba4ec4a8d3b7d780b7a4a0","attrTitle": "白色/10kg","attrType": "颜色/重量","goodsId": 0,"lockStock": 0,"pic": "728a10a5-e8fb-4470-a320-7ab298a38b97.png","price": "32","status": 0,"stock": 13}]
-      // title数组
-      let arr1 = attrs[0].attrType.split('/')
-      let arr2 = []
-      for (let i = 0; i < arr1.length; i++) {
-        let n = []
-        attrs.forEach(v => {
-          n.push(v.attrTitle.split('/')[i])
-        })
-        arr2.push(n)
-      }
-      // 规格数组
-      let arr3 = []
-      arr2.forEach((v, i) => {
-        let n = []
-        for (let i = 0; i < v.length; i++) {
-          if (n.indexOf(v[i]) === -1) {
-            n.push(v[i])
-          }
-        }
-        arr3.push(n)
       })
     },
     preview (i) {
@@ -707,9 +582,6 @@ export default {
     console.log('detailId', this.detailId)
     this.filePath = sessionStorage.getItem('filePath')
     this.getDetailData()
-    // this.getSelectArray()
-    this.getCollectionStatus()
-    this.getDefaultAddress()
   },
   watch: {
   }
