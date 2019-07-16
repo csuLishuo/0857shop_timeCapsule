@@ -200,7 +200,7 @@
       >
         <div class="wrapper" v-for="item in goodsList" :key="item.id" @click="goDetail(item.id)">
           <div class="img-box"><img :src="filePath + item.pics.split(';')[0]" alt=""></div>
-          <div class="name ellipsis-2">【{{item.title}}】{{item.subTitle}}</div>
+          <div class="name ellipsis-2">{{item.title}}{{item.subTitle}}</div>
           <div class="price">
             <div>￥<span>{{item.nowPrice}}</span></div>
             <!-- <div class="label">满38减10</div> -->
