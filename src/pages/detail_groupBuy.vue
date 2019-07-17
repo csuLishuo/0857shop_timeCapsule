@@ -538,7 +538,7 @@
       </van-popup>
     </div>
     <div class="bottom-box">
-      <div class="icon-box" @click="goHome">
+      <div class="icon-box">
         <img src="../images/icon36.png" alt="">
         <div class="text">首页</div>
       </div>
@@ -588,11 +588,6 @@ export default {
     }
   },
   methods: {
-    goHome () {
-      this.$router.push({
-        name: 'home'
-      })
-    },
     getDetailData () {
       this.$post('/api/goodsGroupRules/getGoodsGroupRulesById', {
         id: this.detailId
