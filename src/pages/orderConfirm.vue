@@ -497,7 +497,7 @@ export default {
       }
       this.$post('/api/orders/confirmOrders', sendData).then(res => {
         if (res.result === 0) {
-          Toast.success(res.message)
+          location.href = res.data
         } else {
           Toast.fail(res.message)
         }
