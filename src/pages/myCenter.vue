@@ -310,9 +310,9 @@
       <div class="wrapper">
         <div class="top-box">
           <div class="left-box">
-            <div class="portrait-box"><img src="../images/icon13.png" alt=""></div>
+            <div class="portrait-box"><img :src="wxUserInfo.headerImg" alt=""></div>
             <div class="text-box">
-              <div class="name">斯嘉丽·约翰逊</div>
+              <div class="name">{{wxUserInfo.nickName}}</div>
               <div class="des">代理用户</div>
             </div>
           </div>
@@ -433,7 +433,8 @@ export default {
         categoryId: 0,
         pageNumber: 1,
         pageSize: 4
-      }
+      },
+      wxUserInfo: {}
     }
   },
   methods: {

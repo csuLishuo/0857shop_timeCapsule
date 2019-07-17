@@ -127,91 +127,46 @@
     }
     .area-1{
       background: #fff;
-      .title{
-        background-image: url("../images/img1.png");
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-        width: px2rem(259);
-        height: px2rem(30);
-        line-height: px2rem(30);
-        font-size: px2rem(32);
-        text-align: center;
-        margin: px2rem(24) auto;
-      }
-      .area-1-container{
-        padding: 0 px2rem(24) px2rem(17);
+      width: px2rem(710);
+      margin: px2rem(20) auto;
+      border-radius: px2rem(10);
+      overflow: hidden;
+      padding-bottom: px2rem(20);
+      .img-box-1{
+        height: px2rem(260);
+        width: 100%;
         display: flex;
-        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        img{
+          max-width: 100%;
+          max-height: 100%;
+        }
+      }
+      .wrapper{
+        display: flex;
         flex-wrap: nowrap;
-        align-items: flex-start;
-        justify-content: space-between;
-        .mask{
-          position: absolute;
-          top: 0;
-          left: 0;
-          bottom: 0;
-          right: 0;
-          background: linear-gradient(rgba(255,255,255,1),rgba(255,255,255,0.4));
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          .text{
-            font-size: px2rem(25);
-            line-height: px2rem(50);
-            color: #5b5d66;
-          }
-          .icon-box{
-            width: px2rem(30);
-            height: px2rem(30);
-            img{
-              width: 100%;
-              height: 100%;
-            }
-          }
-        }
-        .left-box{
-          width: px2rem(281);
-          height: px2rem(383);
-          display: flex;
-          align-items: center;
-          position: relative;
-          img{
-            width: 100%;
-          }
-        }
-        .right-box{
-          width: px2rem(416);
-          height: px2rem(383);
-          border-radius: px2rem(5);
+        flex-direction: flex-start;
+        justify-content: space-around;
+        .img-box-2{
+          width: px2rem(182);
+          height: px2rem(182);
+          border-radius: px2rem(6);
           overflow: hidden;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          img{
+            max-width: 100%;
+            max-height: 100%;
+          }
+        }
+        .btn-box{
+          width: px2rem(68);
+          height: px2rem(182);
           img{
             width: 100%;
             height: 100%;
-          }
-          .right-box-1{
-            position: relative;
-            width: 100%;
-            height: px2rem(200);
-            display: flex;
-            align-items: center;
-            margin-bottom: px2rem(16);
-            border-radius: px2rem(5);
-            overflow: hidden;
-          }
-          .right-box-2{
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            align-items: flex-start;
-            justify-content: space-between;
-            .inner{
-              position: relative;
-              width: px2rem(203);
-              height: px2rem(168);
-              border-radius: px2rem(5);
-              overflow: hidden;
-            }
           }
         }
       }
@@ -461,6 +416,7 @@
         </van-swipe-item>
       </van-swipe>-->
     </div>
+
     <div class="links">
       <div class="wrapper" @click="go(1)">
         <div class="img-box"><img src="../images/icon8.png" alt=""></div>
@@ -501,38 +457,23 @@
     <!--<div class="area-del">
       <img src="../images/imgDel8.jpg" alt="">
     </div>-->
-    <div class="area-1-del" @click="goHotSaleList">
-      <img src="../images/imgDel9.jpg" alt="">
+    <!--<div class="area-1-del" @click="goHotSaleList">-->
+      <!--<img src="../images/imgDel9.jpg" alt="">-->
+    <!--</div>-->
+
+    <div class="area-1 clearfix">
+      <div class="img-box-1" @click="goHotSaleDetail(hotSaleGoodsList[0].id)"><img v-if="hotSaleGoodsList[0]" :src="filePath + hotSaleGoodsList[0].pics.split(';')[0]" alt=""></div>
+      <div class="wrapper">
+        <div class="img-box-2" @click="goHotSaleDetail(hotSaleGoodsList[1].id)"><img v-if="hotSaleGoodsList[1]" :src="filePath + hotSaleGoodsList[1].pics.split(';')[0]" alt=""></div>
+        <div class="img-box-2" @click="goHotSaleDetail(hotSaleGoodsList[2].id)"><img v-if="hotSaleGoodsList[2]" :src="filePath + hotSaleGoodsList[2].pics.split(';')[0]" alt=""></div>
+        <div class="img-box-2" @click="goHotSaleDetail(hotSaleGoodsList[3].id)"><img v-if="hotSaleGoodsList[3]" :src="filePath + hotSaleGoodsList[3].pics.split(';')[0]" alt=""></div>
+        <div class="btn-box" @click="goHotSaleList"><img src="../images/btn1.png" alt=""></div>
+      </div>
     </div>
     <div class="area-2-del" @click="go(3)">
       <img src="../images/imgDel10.jpg" alt="">
     </div>
-    <!--<div class="area-1 clearfix">
-      <div class="title">热卖商品</div>
-      <div class="area-1-container">
-        <div class="left-box">
-          <img src="../images/icon1.png" alt="">
-        </div>
-        <div class="right-box">
-          <div class="right-box-1">
-            <img src="../images/icon1.png" alt="">
-          </div>
-          <div class="right-box-2">
-            <div class="inner">
-              <img src="../images/icon1.png" alt="">
-            </div>
-            <div class="inner">
-              <img src="../images/icon1.png" alt="">
-              <div class="mask">
-                <div class="text">查看更多</div>
-                <div class="icon-box"><img src="../images/icon16.png" alt=""></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="area-2 clearfix">
+    <!--<div class="area-2 clearfix">
       <div class="area-2-container">
         <div class="left-box">
           <div class="title-box">
@@ -603,7 +544,7 @@
             <div class="img-box"><img :src="filePath + item.pics.split(';')[0]" alt=""></div>
             <div class="right-box">
               <div class="title ellipsis-2">{{item.title}}{{item.subTitle}}</div>
-              <div class="des">已售{{item.totalSales}}/库存{{JSON.parse(item.attrs)[0].stock}}</div>
+              <!--<div class="des">已售{{item.totalSales}}/库存{{JSON.parse(item.attrs)[0].stock}}</div>-->
               <!--<div class="tag-box">
                 <div class="tag">满38减10</div>
               </div>-->
@@ -647,10 +588,35 @@ export default {
       loadingList: false,
       finished: false,
       signInData: {},
-      signScore: ''
+      signScore: '',
+      sendDataHotSale: {
+        categoryId: 0,
+        pageNumber: 1,
+        pageSize: 4
+      },
+      hotSaleGoodsList: []
     }
   },
   methods: {
+    goHotSaleDetail (id) {
+      this.$router.push({
+        path: 'detail_hotSale',
+        query: {
+          detailId: id
+        }
+      })
+    },
+    getHotSaleGoodsList () {
+      this.$post('/api/goodsHotSale/getGoodsHotSaleListByCategoryId', this.sendDataHotSale).then(res => {
+        if (res.result === 0) {
+          this.hotSaleGoodsList = res.data.list
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        console.error(res)
+      })
+    },
     more () {
       Toast('敬请期待')
     },
@@ -792,7 +758,9 @@ export default {
             this.goodsList = this.goodsList.concat(res.data.list)
           }
           this.filePath = res.filePath
+          console.log('filePathfilePathfilePathfilePathfilePath', this.filePath)
           sessionStorage.setItem('filePath', this.filePath)
+          console.log('filePathfilePathfilePathfilePathfilePath', this.filePath)
           this.total = res.data.totalCount
           this.totalPage = res.data.totalPage
           // 加载状态结束
@@ -838,15 +806,20 @@ export default {
   },
   mounted () {
     // this.test()
-    // if (!sessionStorage.getItem('authStatus')) {
-    //   location.href = 'http://huoyuancheng.wurenyulecang.com/api/user/authorize?returnUrl=2'
-    // }
-    this.getBannerList()
-    this.getAdImg()
-    this.getGoodsCategory()
-    this.getGoodsList()
-    this.getSignInData()
-    this.getSignScore()
+    if (!sessionStorage.getItem('authStatus')) {
+      location.href = 'http://huoyuancheng.wurenyulecang.com/api/user/authorize?returnUrl=2'
+    } else {
+      this.getBannerList()
+      this.getAdImg()
+      this.getGoodsCategory()
+      this.getGoodsList()
+      this.getSignInData()
+      this.getSignScore()
+      this.getHotSaleGoodsList()
+    }
+  },
+  created () {
+    this.wxUserInfo = JSON.parse(localStorage.getItem('wxUserInfo'))
   },
   watch: {
   }
