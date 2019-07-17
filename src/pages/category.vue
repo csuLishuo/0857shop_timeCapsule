@@ -4,6 +4,7 @@
     @return $px * 1 / 100 * 1rem;
   }
   .category-container{
+    padding-bottom: px2rem(100);
     .bg{
       background-image: url("../images/img13.png");
       background-position: top;
@@ -153,6 +154,8 @@
     }
     .van-list{
       display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
       justify-content: space-between;
       width: 100%;
     }
@@ -259,7 +262,7 @@ export default {
           Toast.fail(res.message)
         }
       }).catch(res => {
-        Toast.fail('系统内部错误')
+        console.error(res)
       })
     },
     changeCate (id) {
@@ -279,7 +282,7 @@ export default {
           Toast.fail(res.message)
         }
       }).catch(res => {
-        Toast.fail('系统内部错误')
+        console.error(res)
       })
     },
     getOneMorePage () {
@@ -312,7 +315,7 @@ export default {
           Toast.fail(res.message)
         }
       }).catch(res => {
-        Toast.fail('系统内部错误')
+        console.error(res)
       })
     }
   },
