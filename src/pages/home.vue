@@ -807,7 +807,7 @@ export default {
   mounted () {
     // this.test()
     if (!sessionStorage.getItem('authStatus')) {
-      location.href = 'http://huoyuancheng.wurenyulecang.com/api/user/authorize?returnUrl=2'
+      location.href = 'http://sjcsc.wurenyulecang.com/api/user/authorize?returnUrl=2'
     } else {
       this.getBannerList()
       this.getAdImg()
