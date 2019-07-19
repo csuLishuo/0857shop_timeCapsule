@@ -394,6 +394,71 @@
         line-height: px2rem(78);
       }
     }
+    .share_wrapper{
+      width: px2rem(610);
+      background: #f3f3f3;
+      padding: px2rem(30);
+      .wrapper{
+        background: #fff;
+        border-radius: px2rem(20);
+        overflow: hidden;
+        .downloadImg{
+          background: #fff;
+          padding: px2rem(10);
+          .img-box{
+            width: 100%;
+            height: px2rem(512);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            img{
+              max-width: 100%;
+              max-height: 100%;
+            }
+          }
+          .wrap{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .left-box{
+              .name{
+                font-size: px2rem(26);
+                line-height: px2rem(30);
+                height: px2rem(60);
+                width: px2rem(300);
+              }
+              .price{
+                font-size: px2rem(30);
+                margin-top: px2rem(10);
+                color: #ff3f31;
+              }
+            }
+            .right-box{
+              width: px2rem(140);
+              height: px2rem(140);
+              img{
+                width: 100%;
+                height: 100%;
+              }
+            }
+          }
+        }
+        .finalImage{
+          width: px2rem(550);
+          height: px2rem(704);
+          margin: px2rem(30) auto 0;
+          img{
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .btn{
+          text-align: center;
+          font-size: px2rem(30);
+          margin: px2rem(30) 0;
+        }
+      }
+    }
   }
 </style>
 <template>
@@ -416,7 +481,7 @@
             <div class="text ellipsis-2">
               {{detailData.title}}{{detailData.subTitle}}
             </div>
-            <div class="share">分享</div>
+            <div class="share" @click="share">分享</div>
           </div>
           <div class="area-1">
             <div class="line">
@@ -476,6 +541,29 @@
         </van-tab>
       </van-tabs>
     </div>
+    <van-popup v-model="showPop_share">
+      <div class="share_wrapper">
+        <div class="wrapper">
+          <!--<div class="downloadImg" v-if="!finalImage" ref="downloadImg">
+            <div class="img-box">
+              <img src="../images/img3.png" alt="">
+            </div>
+            <div class="wrap">
+              <div class="left-box">
+                <div class="name ellipsis-2">{{detailData.title}}{{detailData.subTitle}}</div>
+                <div class="price">￥<span>{{detailData.nowPrice}}</span></div>
+              </div>
+              <div class="right-box">
+                &lt;!&ndash;<canvas id="qrcode"></canvas>&ndash;&gt;
+                <img :src="qrcode" alt="">
+              </div>
+            </div>
+          </div>-->
+          <div class="finalImage" v-if="finalImage"><img :src="finalImage" alt=""></div>
+          <div class="btn">长按保存到系统相册</div>
+        </div>
+      </div>
+    </van-popup>
     <div class="pop-select">
       <van-popup v-model="showPop_select" position="bottom">
         <div class="goodDetail">
@@ -523,6 +611,7 @@
 import { Toast, ImagePreview } from 'vant'
 import commentPage from '../components/commentPage'
 import QRCode from 'qrcode'
+// import html2canvas from 'html2canvas'
 
 export default {
   name: 'detailPage',
@@ -551,34 +640,72 @@ export default {
       showIndex: 0,
       userAddressId: '',
       message: '',
-      testImg: require('../images/img1.png')
+      testImg: require('../images/img1.png'),
+      showPop_share: false,
+      qrcode: '',
+      finalImage: ''
     }
   },
   methods: {
     share () {
+      this.showPop_share = true
       let self = this
       let text = window.location.href
       // 获取页面的canvas
-      // var msg= document.getElementById('qrcode')
+      var msg = document.createElement('canvas')
       // 将获取到的数据（val）画到msg（canvas）上
-      // QRCode.toCanvas(msg, text, function (error) {
-            // console.log(error)
-      // })
-      let image = new Image();
-      image.src = '../images/icon1.png'
-      // var canvas = document.createElement('canvas')
-      var canvas= document.getElementById('qrcode')
-      canvas.width = 600
-      canvas.height = 800
-      var context = canvas.getContext('2d')
-      Promise.all([
-        self.loadimage(self.testImg),
-      ]).then(res => {
-        console.log(res)
-        context.drawImage(res[0], 0, 0)
-        let finalResult = canvas.toDataURL('image/png')
-        console.log('finalResult', canvas.toDataURL('image/png'))
+      QRCode.toCanvas(msg, text, error => {
+        self.qrcode = msg.toDataURL('image/png')
+        console.log('msg', msg.toDataURL('image/png'))
+        let finalCanvas = document.createElement('canvas')
+        finalCanvas.width = 550
+        finalCanvas.height = 704
+        let context = finalCanvas.getContext('2d')
+        Promise.all([
+          // self.loadimage(self.testImg),
+          self.loadimage(self.filePath + self.bannerData[0]),
+          self.loadimage(self.qrcode)
+        ]).then(res => {
+          console.log(res)
+          context.fillStyle = '#fff'
+          context.fillRect(0, 0, 550, 704)
+          context.drawImage(res[0], 20, 20, 512, 512)
+          context.drawImage(res[1], 392, 550, 140, 140)
+          // context.font = '26px 微软雅黑'
+          // context.fillStyle = '#333'
+          // self.canvasTextAutoLine(self.detailData.title, finalCanvas, 36, 590, 30)
+          // self.canvasTextAutoLine('【同价618】旗舰店 卡西欧（CASIO）樱花款女表时...', finalCanvas, 36, 590, 30)
+          context.font = '30px 微软雅黑'
+          context.fillStyle = '#ff3f31'
+          context.fillText('￥' + self.detailData.nowPrice, 36, 630)
+          self.finalImage = finalCanvas.toDataURL('image/png')
+        })
       })
+    },
+    canvasTextAutoLine (str, canvas, initX, initY, lineHeight) {
+      var ctx = canvas.getContext('2d')
+      var lineWidth = 0
+      var canvasWidth = 300
+      var lastSubStrIndex = 0
+      for (let i = 0; i < str.length; i++) {
+        lineWidth += ctx.measureText(str[i]).width
+        if (lineWidth > canvasWidth - initX) { // 减去initX,防止边界出现的问题
+          if (str[i] === '，') {
+            ctx.fillText(str.substring(lastSubStrIndex, i + 1), initX, initY)
+            initY += lineHeight
+            lineWidth = 0
+            lastSubStrIndex = i + 1
+          } else {
+            ctx.fillText(str.substring(lastSubStrIndex, i), initX, initY)
+            initY += lineHeight
+            lineWidth = 0
+            lastSubStrIndex = i
+          }
+        }
+        if (i === str.length - 1) {
+          ctx.fillText(str.substring(lastSubStrIndex, i + 1), initX, initY)
+        }
+      }
     },
     loadimage (src) {
       var image = new Image()
@@ -626,7 +753,7 @@ export default {
           name: 'editAddress'
         })
       }
-      
+
     },
     selectAttrSn (index) {
       this.showIndex = index
