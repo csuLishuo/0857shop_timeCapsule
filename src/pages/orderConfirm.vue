@@ -450,7 +450,7 @@ export default {
   },
   data () {
     return {
-      tabStatus: 1,
+      tabStatus: 2,
       checked: false,
       value: 1,
       checkboxResult: [1],
