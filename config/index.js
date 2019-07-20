@@ -12,7 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/proxy': {
-        target: 'http://clearbye.natapp1.cc',
+        // target: 'http://clearbye.natapp1.cc',
+        target: 'http://sjcsc.wurenyulecang.com',
         changeOrigin: true,
         pathRewrite: {
           '^/proxy': ''
