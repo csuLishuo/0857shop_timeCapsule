@@ -522,6 +522,7 @@ export default {
   },
   mounted () {
     this.getGoodsList()
+    this.wxUserInfo = JSON.parse(localStorage.getItem('wxUserInfo'))
   },
   watch: {
   }

@@ -805,7 +805,9 @@ export default {
     }
   },
   mounted () {
-    // this.test()
+    if (this.$route.query.userName) {
+      sessionStorage.setItem('userName', this.$route.query.userName)
+    }
     if (!sessionStorage.getItem('authStatus')) {
       location.href = 'http://sjcsc.wurenyulecang.com/api/user/authorize?returnUrl=2'
     } else {
