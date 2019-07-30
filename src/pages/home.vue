@@ -805,11 +805,14 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.query.userName) {
-      sessionStorage.setItem('userName', this.$route.query.userName)
-    }
+    // if (this.$route.query.userName) {
+    //   sessionStorage.setItem('userName', this.$route.query.userName)
+    // }
     if (!sessionStorage.getItem('authStatus')) {
-      location.href = 'http://sjcsc.wurenyulecang.com/api/user/authorize?returnUrl=2'
+      // location.href = 'http://sjcsc.wurenyulecang.com/api/user/authorize?returnUrl=2'
+      this.$router.push({
+        path: '/login'
+      })
     } else {
       this.getBannerList()
       this.getAdImg()
@@ -821,7 +824,7 @@ export default {
     }
   },
   created () {
-    this.wxUserInfo = JSON.parse(localStorage.getItem('wxUserInfo'))
+    // this.wxUserInfo = JSON.parse(localStorage.getItem('wxUserInfo'))
   },
   watch: {
   }

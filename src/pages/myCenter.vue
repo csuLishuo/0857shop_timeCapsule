@@ -310,10 +310,10 @@
       <div class="wrapper">
         <div class="top-box">
           <div class="left-box">
-            <div class="portrait-box"><img :src="wxUserInfo.headerImg" alt=""></div>
+            <div class="portrait-box"><img :src="userInfo.avatar" alt=""></div>
             <div class="text-box">
-              <div class="name">{{wxUserInfo.nickName}}</div>
-              <div class="des">代理用户</div>
+              <div class="name">{{userInfo.userName}}</div>
+              <div class="des">{{userInfo.userLevel}}</div>
             </div>
           </div>
           <div class="right-box">
@@ -434,7 +434,7 @@ export default {
         pageNumber: 1,
         pageSize: 4
       },
-      wxUserInfo: {}
+      userInfo: {}
     }
   },
   methods: {
@@ -522,7 +522,7 @@ export default {
   },
   mounted () {
     this.getGoodsList()
-    this.wxUserInfo = JSON.parse(localStorage.getItem('wxUserInfo'))
+    this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
   },
   watch: {
   }
